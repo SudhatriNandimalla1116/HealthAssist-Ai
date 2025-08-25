@@ -3,6 +3,7 @@
 import {emergencyTriage} from '@/ai/flows/emergency-triage';
 import {simplifyMedicalTerminology} from '@/ai/flows/medical-terminology-simplifier';
 import {mapSymptoms, type MapSymptomsOutput} from '@/ai/flows/map-symptoms';
+import {textToSpeech} from '@/ai/flows/text-to-speech';
 import type {ChatMessage, HealthDataPoint} from '@/types';
 
 export async function submitMessage(
@@ -11,30 +12,31 @@ export async function submitMessage(
 ): Promise<ChatMessage> {
   const triageResult = await emergencyTriage({userInput: content});
 
-  let aiResponse: Omit<ChatMessage, 'id' | 'createdAt'>;
+  let textContent: string;
+  let isEmergency = false;
+  let disclaimer: string | undefined;
 
   if (triageResult.isEmergency) {
-    aiResponse = {
-      role: 'assistant',
-      content: triageResult.response,
-      isEmergency: true,
-      disclaimer: triageResult.response,
-    };
+    textContent = triageResult.response;
+    isEmergency = true;
+    disclaimer = triageResult.response;
   } else {
     const conditionResult = await mapSymptoms({symptoms: content});
-    aiResponse = {
-      role: 'assistant',
-      content: conditionResult.potentialConditions,
-      isEmergency: false,
-      disclaimer: conditionResult.disclaimer,
-    };
+    textContent = conditionResult.potentialConditions;
+    disclaimer = conditionResult.disclaimer;
   }
+  
+  const { audioUrl } = await textToSpeech(textContent);
 
   return {
-    ...aiResponse,
     id: `ai-${Date.now()}`,
+    role: 'assistant',
+    content: textContent,
+    audioUrl,
+    isEmergency,
+    disclaimer,
     createdAt: new Date(),
-  } as ChatMessage;
+  };
 }
 
 export async function simplifyTerminologyAction(

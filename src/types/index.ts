@@ -4,6 +4,7 @@ export interface ChatMessage {
   id: string;
   role: 'user' | 'assistant';
   content: string;
+  audioUrl?: string;
   isEmergency?: boolean;
   disclaimer?: string;
   createdAt: Timestamp | Date;

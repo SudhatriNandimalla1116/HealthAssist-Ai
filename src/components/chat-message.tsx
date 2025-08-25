@@ -1,9 +1,11 @@
 import type {ChatMessage as ChatMessageT} from '@/types';
 import {cn} from '@/lib/utils';
 import {Avatar, AvatarFallback, AvatarImage} from '@/components/ui/avatar';
-import {Bot, User as UserIcon, AlertTriangle} from 'lucide-react';
+import {Bot, User as UserIcon, AlertTriangle, Volume2, Play} from 'lucide-react';
 import {Alert, AlertDescription} from './ui/alert';
 import type {User} from 'firebase/auth';
+import React, {useRef, useState, useEffect} from 'react';
+import {Button} from './ui/button';
 
 interface ChatMessageProps {
   message: ChatMessageT;
@@ -12,6 +14,43 @@ interface ChatMessageProps {
 
 export function ChatMessage({message, user}: ChatMessageProps) {
   const isUser = message.role === 'user';
+  const audioRef = useRef<HTMLAudioElement>(null);
+  const [isPlaying, setIsPlaying] = useState(false);
+
+  const handlePlayAudio = () => {
+    if (audioRef.current) {
+      if (isPlaying) {
+        audioRef.current.pause();
+        audioRef.current.currentTime = 0;
+      } else {
+        audioRef.current.play();
+      }
+    }
+  };
+
+  useEffect(() => {
+    const audio = audioRef.current;
+    if (audio) {
+      const onPlay = () => setIsPlaying(true);
+      const onPause = () => setIsPlaying(false);
+      const onEnded = () => setIsPlaying(false);
+
+      audio.addEventListener('play', onPlay);
+      audio.addEventListener('pause', onPause);
+      audio.addEventListener('ended', onEnded);
+      
+      if (!isUser && message.audioUrl) {
+        audio.play().catch(e => console.error("Audio autoplay failed:", e));
+      }
+
+      return () => {
+        audio.removeEventListener('play', onPlay);
+        audio.removeEventListener('pause', onPause);
+        audio.removeEventListener('ended', onEnded);
+      };
+    }
+  }, [message.audioUrl, isUser]);
+
   return (
     <div
       className={cn(
@@ -33,7 +72,17 @@ export function ChatMessage({message, user}: ChatMessageProps) {
           )}
         >
           <p className="whitespace-pre-wrap text-sm">{message.content}</p>
+          {!isUser && message.audioUrl && (
+            <>
+              <audio ref={audioRef} src={message.audioUrl} className="hidden" />
+              <Button onClick={handlePlayAudio} variant="ghost" size="icon" className="mt-2 h-8 w-8">
+                {isPlaying ? <Volume2 className="h-4 w-4" /> : <Play className="h-4 w-4" />}
+                <span className="sr-only">{isPlaying ? 'Pause' : 'Play'}</span>
+              </Button>
+            </>
+          )}
         </div>
+
         {!isUser && message.disclaimer && (
           <Alert variant={message.isEmergency ? 'destructive' : 'default'} className="mt-2">
             <AlertTriangle className="h-4 w-4" />

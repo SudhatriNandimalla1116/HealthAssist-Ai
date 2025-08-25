@@ -8,7 +8,7 @@ import {ChatInput} from '@/components/chat-input';
 import {getChatHistory, submitMessage} from '@/app/actions';
 
 interface ChatProps {
-  user: User;
+  user: Partial<User>;
 }
 
 export function Chat({user}: ChatProps) {
@@ -17,9 +17,13 @@ export function Chat({user}: ChatProps) {
   const [isHistoryLoading, setIsHistoryLoading] = useState(true);
 
   useEffect(() => {
+    if (!user.uid) {
+      setIsHistoryLoading(false);
+      return;
+    }
     const loadHistory = async () => {
       try {
-        const history = await getChatHistory(user.uid);
+        const history = await getChatHistory(user.uid!);
         setMessages(history);
       } catch (error) {
         console.error('Failed to load chat history:', error);
@@ -31,7 +35,7 @@ export function Chat({user}: ChatProps) {
   }, [user.uid]);
 
   const handleSendMessage = async (content: string) => {
-    if (!content.trim()) return;
+    if (!content.trim() || !user.uid) return;
 
     const userMessage: ChatMessage = {
       id: `user-${Date.now()}`,

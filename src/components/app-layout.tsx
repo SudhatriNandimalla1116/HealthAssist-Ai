@@ -19,14 +19,12 @@ import {
   SidebarGroupLabel,
   SidebarSeparator,
 } from '@/components/ui/sidebar';
-import {UserNav} from '@/components/user-nav';
 
 interface AppLayoutProps {
-  user: User;
   children: React.ReactNode;
 }
 
-export function AppLayout({user, children}: AppLayoutProps) {
+export function AppLayout({children}: AppLayoutProps) {
   const pathname = usePathname();
 
   return (
@@ -92,7 +90,6 @@ export function AppLayout({user, children}: AppLayoutProps) {
       <SidebarInset>
         <header className="flex h-16 shrink-0 items-center justify-between border-b bg-background px-4 shadow-sm md:px-6">
           <SidebarTrigger />
-          <UserNav user={user} />
         </header>
         <main className="flex flex-1 flex-col overflow-auto">{children}</main>
       </SidebarInset>

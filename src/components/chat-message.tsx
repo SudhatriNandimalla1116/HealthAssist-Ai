@@ -7,7 +7,7 @@ import type {User} from 'firebase/auth';
 
 interface ChatMessageProps {
   message: ChatMessageT;
-  user: User;
+  user: Partial<User>;
 }
 
 export function ChatMessage({message, user}: ChatMessageProps) {

@@ -1,7 +1,6 @@
 'use client';
 
 import {useAuth} from '@/hooks/use-auth';
-import {SignIn} from '@/components/sign-in';
 import {AppLayout} from '@/components/app-layout';
 import {TerminologySimplifier} from '@/components/terminology-simplifier';
 import {Bot} from 'lucide-react';
@@ -18,18 +17,14 @@ function LoadingScreen() {
 }
 
 export default function TerminologySimplifierPage() {
-  const {user, loading} = useAuth();
+  const {loading} = useAuth();
 
   if (loading) {
     return <LoadingScreen />;
   }
 
-  if (!user) {
-    return <SignIn />;
-  }
-
   return (
-    <AppLayout user={user}>
+    <AppLayout>
       <div className="p-4 md:p-6">
         <h2 className="text-2xl font-bold tracking-tight">
           Medical Terminology Simplifier

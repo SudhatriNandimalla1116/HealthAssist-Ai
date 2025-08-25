@@ -12,7 +12,7 @@ interface ChatListProps {
   messages: ChatMessageT[];
   isLoading: boolean;
   isHistoryLoading: boolean;
-  user: User;
+  user: Partial<User>;
 }
 
 const LoadingBubble = () => (

@@ -1,7 +1,6 @@
 'use client';
 
 import {useAuth} from '@/hooks/use-auth';
-import {SignIn} from '@/components/sign-in';
 import {Bot} from 'lucide-react';
 import {AppLayout} from '@/components/app-layout';
 import {Chat} from '@/components/chat';
@@ -26,12 +25,8 @@ export default function Home() {
     return <LoadingScreen />;
   }
 
-  if (!user) {
-    return <SignIn />;
-  }
-
   return (
-    <AppLayout user={user}>
+    <AppLayout>
       <div className="flex flex-1 flex-col overflow-hidden">
         <div className="border-b bg-card p-4">
           <Alert>
@@ -43,7 +38,7 @@ export default function Home() {
             </AlertDescription>
           </Alert>
         </div>
-        <Chat user={user} />
+        <Chat user={{uid: 'anonymous'}} />
       </div>
     </AppLayout>
   );

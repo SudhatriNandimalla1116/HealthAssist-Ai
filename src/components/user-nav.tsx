@@ -31,7 +31,7 @@ export function UserNav({user}: UserNavProps) {
           <Avatar className="h-10 w-10">
             <AvatarImage src={user.photoURL ?? ''} alt={user.displayName ?? 'User'} />
             <AvatarFallback>
-              <UserIcon />
+              {user.displayName ? user.displayName.charAt(0).toUpperCase() : <UserIcon />}
             </AvatarFallback>
           </Avatar>
         </Button>

@@ -2,7 +2,7 @@
 
 /**
  * @fileOverview Emergency triage flow to detect and respond to critical symptoms.
- *
+ * 
  * - emergencyTriage - A function that processes user input and checks for emergency symptoms.
  * - EmergencyTriageInput - The input type for the emergencyTriage function.
  * - EmergencyTriageOutput - The return type for the emergencyTriage function.
@@ -36,9 +36,9 @@ const prompt = ai.definePrompt({
   *   difficulty breathing: isEmergency=true; response="Seek immediate medical attention. Difficulty breathing can be a sign of a serious respiratory issue."
   *   loss of consciousness: isEmergency=true; response="Seek immediate medical attention. Loss of consciousness can indicate a serious medical condition."
   *   severe bleeding: isEmergency=true; response="Seek immediate medical attention. Severe bleeding requires immediate medical intervention."
+  *   stroke symptoms: isEmergency=true; response="Seek immediate medical attention. Act F.A.S.T. - Face drooping, Arm weakness, Speech difficulty, Time to call 911."
 
-User Input: {{{userInput}}}
-`,
+User Input: {{{userInput}}}`,
 });
 
 const emergencyTriageFlow = ai.defineFlow(

@@ -11,7 +11,8 @@ import {
   getDocs,
 } from 'firebase/firestore';
 import {emergencyTriage} from '@/ai/flows/emergency-triage';
-import {symptomToCondition} from '@/ai/flows/symptom-to-condition';
+import {simplifyMedicalTerminology} from '@/ai/flows/medical-terminology-simplifier';
+import {mapSymptoms, type MapSymptomsOutput} from '@/ai/flows/map-symptoms';
 import type {ChatMessage} from '@/types';
 
 export async function submitMessage(
@@ -42,7 +43,7 @@ export async function submitMessage(
     };
   } else {
     // 3b. If not emergency, get potential conditions
-    const conditionResult = await symptomToCondition({symptoms: content});
+    const conditionResult = await mapSymptoms({symptoms: content});
     aiResponse = {
       role: 'assistant',
       content: conditionResult.potentialConditions,
@@ -53,7 +54,10 @@ export async function submitMessage(
   }
 
   // 4. Save AI response to Firestore
-  const docRef = await addDoc(collection(db, 'users', userId, 'messages'), aiResponse);
+  const docRef = await addDoc(
+    collection(db, 'users', userId, 'messages'),
+    aiResponse
+  );
 
   // 5. Return the full AI response object to the client
   return {
@@ -80,4 +84,40 @@ export async function getChatHistory(userId: string): Promise<ChatMessage[]> {
   });
 
   return history;
+}
+
+export async function simplifyTerminologyAction(
+  medicalText: string
+): Promise<string> {
+  if (!medicalText.trim()) {
+    return '';
+  }
+  try {
+    const result = await simplifyMedicalTerminology({medicalText});
+    return result.simplifiedText;
+  } catch (error) {
+    console.error('Error simplifying terminology:', error);
+    // Return a user-friendly error message
+    return 'An error occurred while simplifying the text. Please try again later.';
+  }
+}
+
+export async function mapSymptomsAction(
+  symptoms: string
+): Promise<MapSymptomsOutput> {
+  if (!symptoms.trim()) {
+    return {potentialConditions: '', disclaimer: ''};
+  }
+  try {
+    const result = await mapSymptoms({symptoms});
+    return result;
+  } catch (error) {
+    console.error('Error mapping symptoms:', error);
+    return {
+      potentialConditions:
+        'An error occurred while analyzing your symptoms. Please try again later.',
+      disclaimer:
+        'This AI is for informational purposes only and does not provide medical advice. Consult a healthcare professional for any medical concerns.',
+    };
+  }
 }

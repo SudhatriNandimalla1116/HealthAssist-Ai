@@ -3,12 +3,14 @@ import {cn} from '@/lib/utils';
 import {Avatar, AvatarFallback, AvatarImage} from '@/components/ui/avatar';
 import {Bot, User as UserIcon, AlertTriangle} from 'lucide-react';
 import {Alert, AlertDescription} from './ui/alert';
+import type {User} from 'firebase/auth';
 
 interface ChatMessageProps {
   message: ChatMessageT;
+  user: User;
 }
 
-export function ChatMessage({message}: ChatMessageProps) {
+export function ChatMessage({message, user}: ChatMessageProps) {
   const isUser = message.role === 'user';
   return (
     <div
@@ -41,8 +43,9 @@ export function ChatMessage({message}: ChatMessageProps) {
       </div>
       {isUser && (
         <Avatar className="h-10 w-10">
+          <AvatarImage src={user.photoURL ?? ''} alt={user.displayName ?? ''} />
           <AvatarFallback>
-            <UserIcon className="h-6 w-6 text-muted-foreground" />
+            {user.displayName ? user.displayName.charAt(0).toUpperCase() : <UserIcon />}
           </AvatarFallback>
         </Avatar>
       )}

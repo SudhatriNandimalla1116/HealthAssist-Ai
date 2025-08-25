@@ -6,11 +6,13 @@ import {ChatMessage as ChatMessageT} from '@/types';
 import {ChatMessage} from '@/components/chat-message';
 import {Skeleton} from './ui/skeleton';
 import {Bot} from 'lucide-react';
+import type {User} from 'firebase/auth';
 
 interface ChatListProps {
   messages: ChatMessageT[];
   isLoading: boolean;
   isHistoryLoading: boolean;
+  user: User;
 }
 
 const LoadingBubble = () => (
@@ -43,7 +45,7 @@ const HistorySkeleton = () => (
   </div>
 );
 
-export function ChatList({messages, isLoading, isHistoryLoading}: ChatListProps) {
+export function ChatList({messages, isLoading, isHistoryLoading, user}: ChatListProps) {
   const scrollAreaRef = useRef<HTMLDivElement>(null);
   const viewportRef = useRef<HTMLDivElement>(null);
 
@@ -61,7 +63,7 @@ export function ChatList({messages, isLoading, isHistoryLoading}: ChatListProps)
         ) : (
           <div className="space-y-6">
             {messages.map(message => (
-              <ChatMessage key={message.id} message={message} />
+              <ChatMessage key={message.id} message={message} user={user} />
             ))}
             {isLoading && <LoadingBubble />}
           </div>

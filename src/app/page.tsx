@@ -2,8 +2,11 @@
 
 import {useAuth} from '@/hooks/use-auth';
 import {SignIn} from '@/components/sign-in';
-import {ChatPage} from '@/components/chat-page';
 import {Bot} from 'lucide-react';
+import {AppLayout} from '@/components/app-layout';
+import {Chat} from '@/components/chat';
+import {Alert, AlertDescription, AlertTitle} from '@/components/ui/alert';
+import {ShieldAlert} from 'lucide-react';
 
 function LoadingScreen() {
   return (
@@ -27,5 +30,21 @@ export default function Home() {
     return <SignIn />;
   }
 
-  return <ChatPage user={user} />;
+  return (
+    <AppLayout user={user}>
+      <div className="flex flex-1 flex-col overflow-hidden">
+        <div className="border-b bg-card p-4">
+          <Alert>
+            <ShieldAlert className="h-4 w-4" />
+            <AlertTitle className="font-semibold">Medical Disclaimer</AlertTitle>
+            <AlertDescription>
+              This AI is for informational purposes only and does not provide medical advice.
+              Consult a healthcare professional for any medical concerns.
+            </AlertDescription>
+          </Alert>
+        </div>
+        <Chat user={user} />
+      </div>
+    </AppLayout>
+  );
 }

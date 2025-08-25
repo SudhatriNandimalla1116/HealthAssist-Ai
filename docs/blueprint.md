@@ -7,7 +7,7 @@
 - Basic Input Form: Implement a simple text input field with a 'send' button.
 - Symptom Mapping: Process user input via the AI agent to map symptoms to potential conditions using a pre-trained model or custom knowledge base as a tool.
 - Emergency Triage: Emergency triage protocol with immediate response to high-priority keywords.
-- Medical Terminology Tool: AI-powered medical terminology simplifier.
+- Medical Terminology Tool: AI-powered medical terminology simplifier tool.
 
 ## Style Guidelines:
 

@@ -19,9 +19,9 @@ const SymptomToConditionInputSchema = z.object({
 export type SymptomToConditionInput = z.infer<typeof SymptomToConditionInputSchema>;
 
 const SymptomToConditionOutputSchema = z.object({
-  potentialConditions: z
-    .string() // Changed from array to string
-    .describe('A list of potential medical conditions related to the symptoms.'),
+  potentialConditions:
+    z.string()
+      .describe('A list of potential medical conditions related to the symptoms.'),
   disclaimer: z.string().describe('Medical disclaimer to be displayed to the user.'),
 });
 export type SymptomToConditionOutput = z.infer<typeof SymptomToConditionOutputSchema>;
@@ -34,13 +34,7 @@ const prompt = ai.definePrompt({
   name: 'symptomToConditionPrompt',
   input: {schema: SymptomToConditionInputSchema},
   output: {schema: SymptomToConditionOutputSchema},
-  prompt: `You are an AI medical assistant. A user will provide a list of symptoms, and you will return a list of potential medical conditions related to those symptoms.
-
-  Always lead with the following disclaimer: "This information is intended for informational purposes only and does not constitute medical advice. Always consult with a qualified healthcare professional for diagnosis and treatment."
-
-  Symptoms: {{{symptoms}}}
-
-  Potential Conditions:`, // Modified the prompt here
+  prompt: `You are an AI medical assistant. A user will provide a list of symptoms, and you will return a list of potential medical conditions related to those symptoms.\n\n  Always lead with the following disclaimer: \"This information is intended for informational purposes only and does not constitute medical advice. Always consult with a qualified healthcare professional for diagnosis and treatment.\"\n\n  Symptoms: {{{symptoms}}}\n\n  Potential Conditions:`,
   config: {
     safetySettings: [
       {
@@ -61,7 +55,7 @@ const symptomToConditionFlow = ai.defineFlow(
     const {output} = await prompt(input);
     return {
       ...output!,
-      disclaimer: // Added the disclaimer here to ensure it's always present
+      disclaimer:
         'This information is intended for informational purposes only and does not constitute medical advice. Always consult with a qualified healthcare professional for diagnosis and treatment.',
     };
   }

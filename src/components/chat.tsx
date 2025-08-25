@@ -62,7 +62,7 @@ export function Chat({user}: ChatProps) {
 
   return (
     <div className="flex flex-1 flex-col overflow-hidden">
-      <ChatList messages={messages} isLoading={isLoading} isHistoryLoading={isHistoryLoading} />
+      <ChatList messages={messages} isLoading={isLoading} isHistoryLoading={isHistoryLoading} user={user} />
       <div className="border-t bg-card p-4">
         <ChatInput onSendMessage={handleSendMessage} isLoading={isLoading} />
       </div>

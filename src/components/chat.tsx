@@ -1,11 +1,11 @@
 'use client';
 
 import type {User} from 'firebase/auth';
-import {useState, useEffect} from 'react';
+import {useState} from 'react';
 import type {ChatMessage} from '@/types';
 import {ChatList} from '@/components/chat-list';
 import {ChatInput} from '@/components/chat-input';
-import {getChatHistory, submitMessage} from '@/app/actions';
+import {submitMessage} from '@/app/actions';
 
 interface ChatProps {
   user: Partial<User>;
@@ -14,25 +14,7 @@ interface ChatProps {
 export function Chat({user}: ChatProps) {
   const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [isLoading, setIsLoading] = useState(false);
-  const [isHistoryLoading, setIsHistoryLoading] = useState(true);
-
-  useEffect(() => {
-    if (!user.uid) {
-      setIsHistoryLoading(false);
-      return;
-    }
-    const loadHistory = async () => {
-      try {
-        const history = await getChatHistory(user.uid!);
-        setMessages(history);
-      } catch (error) {
-        console.error('Failed to load chat history:', error);
-      } finally {
-        setIsHistoryLoading(false);
-      }
-    };
-    loadHistory();
-  }, [user.uid]);
+  const [isHistoryLoading, setIsHistoryLoading] = useState(false);
 
   const handleSendMessage = async (content: string) => {
     if (!content.trim() || !user.uid) return;

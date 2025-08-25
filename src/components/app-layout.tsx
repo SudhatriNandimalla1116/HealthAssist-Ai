@@ -50,7 +50,7 @@ export function AppLayout({children}: AppLayoutProps) {
               >
                 <Link href="/">
                   <MessageSquare />
-                  <span>Symptom Checker</span>
+                  <span>Chat</span>
                 </Link>
               </SidebarMenuButton>
             </SidebarMenuItem>
@@ -67,7 +67,7 @@ export function AppLayout({children}: AppLayoutProps) {
                 >
                   <Link href="/tools/terminology-simplifier">
                     <BookText />
-                    <span>Terminology Simplifier</span>
+                    <span>Simplify Terms</span>
                   </Link>
                 </SidebarMenuButton>
               </SidebarMenuItem>
@@ -79,7 +79,7 @@ export function AppLayout({children}: AppLayoutProps) {
                 >
                   <Link href="/tools/symptom-condition-mapper">
                     <HeartPulse />
-                    <span>Symptom Mapper</span>
+                    <span>Symptom Map</span>
                   </Link>
                 </SidebarMenuButton>
               </SidebarMenuItem>
@@ -91,7 +91,7 @@ export function AppLayout({children}: AppLayoutProps) {
                 >
                   <Link href="/tools/health-progress-tracker">
                     <LineChart />
-                    <span>Progress Tracker</span>
+                    <span>Health Tracker</span>
                   </Link>
                 </SidebarMenuButton>
               </SidebarMenuItem>

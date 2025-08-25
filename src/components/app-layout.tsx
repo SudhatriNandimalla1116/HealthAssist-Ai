@@ -3,7 +3,7 @@
 import type {User} from 'firebase/auth';
 import Link from 'next/link';
 import {usePathname} from 'next/navigation';
-import {Bot, MessageSquare, BookText, HeartPulse} from 'lucide-react';
+import {Bot, MessageSquare, BookText, HeartPulse, LineChart} from 'lucide-react';
 
 import {
   SidebarProvider,
@@ -80,6 +80,18 @@ export function AppLayout({children}: AppLayoutProps) {
                   <Link href="/tools/symptom-condition-mapper">
                     <HeartPulse />
                     <span>Symptom Mapper</span>
+                  </Link>
+                </SidebarMenuButton>
+              </SidebarMenuItem>
+              <SidebarMenuItem>
+                <SidebarMenuButton
+                  asChild
+                  isActive={pathname === '/tools/health-progress-tracker'}
+                  tooltip={{children: 'Progress Tracker'}}
+                >
+                  <Link href="/tools/health-progress-tracker">
+                    <LineChart />
+                    <span>Progress Tracker</span>
                   </Link>
                 </SidebarMenuButton>
               </SidebarMenuItem>

@@ -8,3 +8,12 @@ export interface ChatMessage {
   disclaimer?: string;
   createdAt: Timestamp | Date;
 }
+
+export interface HealthDataPoint {
+  id: string;
+  weight: number;
+  systolic: number;
+  diastolic: number;
+  mood: number; // e.g., 1 to 5 scale
+  createdAt: Timestamp | Date;
+}

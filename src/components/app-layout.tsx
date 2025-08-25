@@ -67,7 +67,7 @@ export function AppLayout({children}: AppLayoutProps) {
                 >
                   <Link href="/tools/terminology-simplifier">
                     <BookText />
-                    <span>Simplify Terms</span>
+                    <span>Explain Terms</span>
                   </Link>
                 </SidebarMenuButton>
               </SidebarMenuItem>
@@ -79,7 +79,7 @@ export function AppLayout({children}: AppLayoutProps) {
                 >
                   <Link href="/tools/symptom-condition-mapper">
                     <HeartPulse />
-                    <span>Symptom Map</span>
+                    <span>Check Symptoms</span>
                   </Link>
                 </SidebarMenuButton>
               </SidebarMenuItem>

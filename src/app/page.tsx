@@ -13,7 +13,7 @@ export default function LandingPage() {
           <p className="mt-2 text-lg text-muted-foreground">How can I help you today?</p>
         </div>
         <Button asChild size="lg">
-          <Link href="/chat">Continue</Link>
+          <Link href="/chat">Let's Chat</Link>
         </Button>
       </div>
     </div>

@@ -1,7 +1,7 @@
 'use client';
 
 import type {User} from 'firebase/auth';
-import {useState} from 'react';
+import {useState, useEffect} from 'react';
 import type {ChatMessage} from '@/types';
 import {ChatList} from '@/components/chat-list';
 import {ChatInput} from '@/components/chat-input';
@@ -11,10 +11,41 @@ interface ChatProps {
   user: Partial<User>;
 }
 
+const CHAT_HISTORY_KEY = 'health-assist-chat-history';
+
 export function Chat({user}: ChatProps) {
   const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [isLoading, setIsLoading] = useState(false);
-  const [isHistoryLoading, setIsHistoryLoading] = useState(false);
+  const [isHistoryLoading, setIsHistoryLoading] = useState(true);
+
+  // Load messages from localStorage on initial render
+  useEffect(() => {
+    try {
+      const savedMessages = localStorage.getItem(CHAT_HISTORY_KEY);
+      if (savedMessages) {
+        // We need to parse and then convert date strings back to Date objects
+        const parsedMessages = JSON.parse(savedMessages).map((msg: ChatMessage) => ({
+          ...msg,
+          createdAt: new Date(msg.createdAt),
+        }));
+        setMessages(parsedMessages);
+      }
+    } catch (error) {
+      console.error("Failed to load chat history from localStorage", error);
+    }
+    setIsHistoryLoading(false);
+  }, []);
+
+  // Save messages to localStorage whenever they change
+  useEffect(() => {
+    if (!isHistoryLoading) {
+        try {
+            localStorage.setItem(CHAT_HISTORY_KEY, JSON.stringify(messages));
+        } catch (error) {
+            console.error("Failed to save chat history to localStorage", error);
+        }
+    }
+  }, [messages, isHistoryLoading]);
 
   const handleSendMessage = async (content: string) => {
     if (!content.trim() || !user.uid) return;

@@ -28,7 +28,13 @@ export default function Home() {
   return (
     <AppLayout>
       <div className="flex flex-1 flex-col overflow-hidden">
-        <div className="border-b bg-card p-4">
+        <div className="border-b bg-card p-4 md:p-6">
+           <h2 className="text-2xl font-bold tracking-tight">AI Chat</h2>
+            <p className="text-muted-foreground">
+              Your personal AI-powered health assistant.
+            </p>
+        </div>
+         <div className="p-4 md:p-6">
           <Alert>
             <ShieldAlert className="h-4 w-4" />
             <AlertTitle className="font-semibold">Medical Disclaimer</AlertTitle>

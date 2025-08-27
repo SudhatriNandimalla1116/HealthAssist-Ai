@@ -5,6 +5,50 @@ import {simplifyMedicalTerminology} from '@/ai/flows/medical-terminology-simplif
 import {mapSymptoms, type MapSymptomsOutput} from '@/ai/flows/map-symptoms';
 import {textToSpeech} from '@/ai/flows/text-to-speech';
 import type {ChatMessage, HealthDataPoint} from '@/types';
+import {ai} from '@/ai/genkit';
+import {z} from 'zod';
+
+
+// Schema for analyzeSkinCondition flow
+const AnalyzeSkinConditionInputSchema = z.object({
+  photoDataUri: z.string().describe("A photo of a skin condition, as a data URI."),
+});
+const AnalyzeSkinConditionOutputSchema = z.object({
+  analysis: z.string().describe("The AI's analysis of the skin condition."),
+});
+
+// Genkit flow for analyzing skin conditions
+const analyzeSkinConditionFlow = ai.defineFlow(
+  {
+    name: 'analyzeSkinConditionFlow',
+    inputSchema: AnalyzeSkinConditionInputSchema,
+    outputSchema: AnalyzeSkinConditionOutputSchema,
+  },
+  async (input) => {
+    const prompt = `You are a dermatology assistant. Analyze the following image of a skin condition and provide a brief, helpful analysis. Start with a clear disclaimer that this is not a medical diagnosis and the user should consult a dermatologist. Describe what you see, mention potential (but not definitive) conditions it might resemble, and suggest next steps, like monitoring or seeing a doctor. Keep the tone helpful and cautious. Image: {{media url=photoDataUri}}`;
+    
+    const { output } = await ai.generate({
+      prompt,
+      model: 'googleai/gemini-2.0-flash',
+      input: { photoDataUri: input.photoDataUri },
+      output: { schema: AnalyzeSkinConditionOutputSchema },
+       config: {
+        safetySettings: [
+          { category: 'HARM_CATEGORY_MEDICAL', threshold: 'BLOCK_NONE' },
+          { category: 'HARM_CATEGORY_DANGEROUS_CONTENT', threshold: 'BLOCK_NONE' },
+        ],
+      },
+    });
+
+    return output!;
+  }
+);
+
+
+export async function analyzeSkinCondition(input: { photoDataUri: string }): Promise<{ analysis: string }> {
+  return analyzeSkinConditionFlow(input);
+}
+
 
 export async function submitMessage(
   userId: string,

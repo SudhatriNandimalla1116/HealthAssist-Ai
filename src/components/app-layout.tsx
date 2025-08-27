@@ -3,7 +3,7 @@
 import type {User} from 'firebase/auth';
 import Link from 'next/link';
 import {usePathname} from 'next/navigation';
-import {Bot, MessageSquare, BookText, HeartPulse, LineChart} from 'lucide-react';
+import {Bot, MessageSquare, BookText, HeartPulse, LineChart, Camera, Map, Bell} from 'lucide-react';
 
 import {
   SidebarProvider,
@@ -92,6 +92,42 @@ export function AppLayout({children}: AppLayoutProps) {
                   <Link href="/tools/health-progress-tracker">
                     <LineChart />
                     <span>Health Tracker</span>
+                  </Link>
+                </SidebarMenuButton>
+              </SidebarMenuItem>
+              <SidebarMenuItem>
+                <SidebarMenuButton
+                  asChild
+                  isActive={pathname === '/tools/skin-analyzer'}
+                  tooltip={{children: 'Skin Analyzer'}}
+                >
+                  <Link href="/tools/skin-analyzer">
+                    <Camera />
+                    <span>Skin Analyzer</span>
+                  </Link>
+                </SidebarMenuButton>
+              </SidebarMenuItem>
+               <SidebarMenuItem>
+                <SidebarMenuButton
+                  asChild
+                  isActive={pathname === '/tools/health-services-finder'}
+                  tooltip={{children: 'Find Services'}}
+                >
+                  <Link href="/tools/health-services-finder">
+                    <Map />
+                    <span>Find Services</span>
+                  </Link>
+                </SidebarMenuButton>
+              </SidebarMenuItem>
+               <SidebarMenuItem>
+                <SidebarMenuButton
+                  asChild
+                  isActive={pathname === '/tools/health-reminders'}
+                  tooltip={{children: 'Reminders'}}
+                >
+                  <Link href="/tools/health-reminders">
+                    <Bell />
+                    <span>Reminders</span>
                   </Link>
                 </SidebarMenuButton>
               </SidebarMenuItem>

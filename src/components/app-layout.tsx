@@ -3,7 +3,7 @@
 import type {User} from 'firebase/auth';
 import Link from 'next/link';
 import {usePathname} from 'next/navigation';
-import {Bot, MessageSquare, BookText, HeartPulse, LineChart, Camera, Map, Bell} from 'lucide-react';
+import {Bot, MessageSquare, BookText, HeartPulse, LineChart, Camera, Map, Bell, History} from 'lucide-react';
 
 import {
   SidebarProvider,
@@ -51,6 +51,18 @@ export function AppLayout({children}: AppLayoutProps) {
                 <Link href="/">
                   <MessageSquare />
                   <span>Chat</span>
+                </Link>
+              </SidebarMenuButton>
+            </SidebarMenuItem>
+             <SidebarMenuItem>
+              <SidebarMenuButton
+                asChild
+                isActive={pathname === '/chat-history'}
+                tooltip={{children: 'Chat History'}}
+              >
+                <Link href="/chat-history">
+                  <History />
+                  <span>Chat History</span>
                 </Link>
               </SidebarMenuButton>
             </SidebarMenuItem>

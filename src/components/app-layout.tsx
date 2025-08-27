@@ -45,10 +45,10 @@ export function AppLayout({children}: AppLayoutProps) {
             <SidebarMenuItem>
               <SidebarMenuButton
                 asChild
-                isActive={pathname === '/'}
+                isActive={pathname === '/chat'}
                 tooltip={{children: 'Chat'}}
               >
-                <Link href="/">
+                <Link href="/chat">
                   <MessageSquare />
                   <span>Chat</span>
                 </Link>

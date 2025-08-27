@@ -1,4 +1,3 @@
-'use client';
 
 import {AppLayout} from '@/components/app-layout';
 import {SkinAnalyzer} from '@/components/skin-analyzer';

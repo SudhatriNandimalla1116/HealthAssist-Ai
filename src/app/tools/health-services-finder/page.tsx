@@ -1,4 +1,3 @@
-'use client';
 
 import {AppLayout} from '@/components/app-layout';
 import {HealthServicesFinder} from '@/components/health-services-finder';

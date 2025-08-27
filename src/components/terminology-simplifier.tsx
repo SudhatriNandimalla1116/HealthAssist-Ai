@@ -26,8 +26,8 @@ import {Wand2, Loader2, Clipboard, Check} from 'lucide-react';
 import {useToast} from '@/hooks/use-toast';
 
 const FormSchema = z.object({
-  medicalText: z.string().min(10, {
-    message: 'Please enter at least 10 characters of medical text.',
+  medicalText: z.string().min(1, {
+    message: 'Please enter some medical text.',
   }),
 });
 

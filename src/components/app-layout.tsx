@@ -86,18 +86,6 @@ export function AppLayout({children}: AppLayoutProps) {
               <SidebarMenuItem>
                 <SidebarMenuButton
                   asChild
-                  isActive={pathname === '/tools/health-progress-tracker'}
-                  tooltip={{children: 'Health History'}}
-                >
-                  <Link href="/tools/health-progress-tracker">
-                    <LineChart />
-                    <span>Health History</span>
-                  </Link>
-                </SidebarMenuButton>
-              </SidebarMenuItem>
-              <SidebarMenuItem>
-                <SidebarMenuButton
-                  asChild
                   isActive={pathname === '/tools/skin-analyzer'}
                   tooltip={{children: 'Skin Analyzer'}}
                 >

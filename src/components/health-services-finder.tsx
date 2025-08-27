@@ -31,8 +31,10 @@ export function HealthServicesFinder() {
   const { toast } = useToast();
 
   useEffect(() => {
+    // Check initial permission status
     navigator.permissions.query({ name: 'geolocation' }).then(permissionStatus => {
       setHasLocationPermission(permissionStatus.state === 'granted');
+      // Listen for changes in permission
       permissionStatus.onchange = () => {
         setHasLocationPermission(permissionStatus.state === 'granted');
       };
@@ -40,12 +42,17 @@ export function HealthServicesFinder() {
   }, []);
 
   const handleSearch = () => {
-    if (hasLocationPermission === false) {
+     if (hasLocationPermission === false) {
        toast({
         variant: 'destructive',
         title: 'Location permission required',
         description: 'Please enable location services in your browser to find nearby services.',
       });
+      return;
+    }
+
+    if (hasLocationPermission === null) {
+      requestLocation();
       return;
     }
     
@@ -62,15 +69,22 @@ export function HealthServicesFinder() {
       (position) => {
         setHasLocationPermission(true);
         toast({ title: 'Location access granted!' });
-        handleSearch();
+        // Automatically search after getting permission
+        setIsLoading(true);
+        setTimeout(() => {
+          setLocations(mockLocations[serviceType as keyof typeof mockLocations] || []);
+          setIsLoading(false);
+        }, 1500);
       },
       (error) => {
         setHasLocationPermission(false);
-        toast({
-          variant: 'destructive',
-          title: 'Location Access Denied',
-          description: 'You need to allow location access to use this feature.',
-        });
+        if (error.code !== error.PERMISSION_DENIED) {
+            toast({
+              variant: 'destructive',
+              title: 'Location Access Denied',
+              description: 'You need to allow location access to use this feature.',
+            });
+        }
       }
     );
   };
@@ -106,6 +120,15 @@ export function HealthServicesFinder() {
               </Button>
             )}
           </div>
+           {hasLocationPermission === false && (
+            <Alert variant="destructive" className="mt-4">
+              <MapPin className="h-4 w-4" />
+              <AlertTitle>Location Access Is Off</AlertTitle>
+              <AlertDescription>
+                To find nearby health services, please enable location permissions for this site in your browser settings.
+              </AlertDescription>
+            </Alert>
+          )}
         </CardContent>
       </Card>
 

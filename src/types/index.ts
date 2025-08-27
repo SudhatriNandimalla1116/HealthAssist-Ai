@@ -1,3 +1,4 @@
+// Firebase types are optional - the app can run without Firebase
 import type {Timestamp} from 'firebase/firestore';
 
 export interface ChatMessage {
@@ -7,7 +8,7 @@ export interface ChatMessage {
   audioUrl?: string;
   isEmergency?: boolean;
   disclaimer?: string;
-  createdAt: Timestamp | Date;
+  createdAt: Date;
 }
 
 export interface HealthDataPoint {
@@ -16,5 +17,5 @@ export interface HealthDataPoint {
   systolic: number;
   diastolic: number;
   mood: number; // e.g., 1 to 5 scale
-  createdAt: Timestamp | Date;
+  createdAt: Date;
 }

@@ -1,6 +1,6 @@
 'use client';
 
-import {useState, useRef, type FormEvent, useEffect} from 'react';
+import {useState, useRef, type FormEvent, useEffect, useCallback, useMemo} from 'react';
 import {Textarea} from '@/components/ui/textarea';
 import {Button} from '@/components/ui/button';
 import {Send, Mic, MicOff} from 'lucide-react';
@@ -17,7 +17,8 @@ export function ChatInput({onSendMessage, isLoading}: ChatInputProps) {
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const recognitionRef = useRef<SpeechRecognition | null>(null);
 
-  useEffect(() => {
+  // Memoize speech recognition setup
+  const setupSpeechRecognition = useMemo(() => {
     const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
     if (SpeechRecognition) {
       const recognition = new SpeechRecognition();
@@ -41,28 +42,31 @@ export function ChatInput({onSendMessage, isLoading}: ChatInputProps) {
         setIsRecording(false);
       };
 
-      recognitionRef.current = recognition;
+      return recognition;
     }
+    return null;
+  }, []);
 
+  useEffect(() => {
+    recognitionRef.current = setupSpeechRecognition;
     return () => {
       recognitionRef.current?.stop();
     };
-  }, []);
+  }, [setupSpeechRecognition]);
 
-  const toggleRecording = () => {
+  const toggleRecording = useCallback(() => {
     if (!recognitionRef.current) return;
 
     if (isRecording) {
       recognitionRef.current.stop();
     } else {
-      // Clear message before starting new recording
       setMessage('');
       recognitionRef.current.start();
     }
     setIsRecording(!isRecording);
-  };
+  }, [isRecording]);
 
-  const handleSubmit = (e: FormEvent) => {
+  const handleSubmit = useCallback((e: FormEvent) => {
     e.preventDefault();
     if (isRecording) {
       recognitionRef.current?.stop();
@@ -72,14 +76,19 @@ export function ChatInput({onSendMessage, isLoading}: ChatInputProps) {
       setMessage('');
       textareaRef.current?.focus();
     }
-  };
+  }, [isRecording, message, onSendMessage]);
 
-  const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
+  const handleKeyDown = useCallback((e: React.KeyboardEvent<HTMLTextAreaElement>) => {
     if (e.key === 'Enter' && !e.shiftKey) {
       e.preventDefault();
       handleSubmit(e);
     }
-  };
+  }, [handleSubmit]);
+
+  const placeholder = useMemo(() => 
+    isRecording ? 'Listening...' : 'Tell me how you\'re feeling or what you need help with...',
+    [isRecording]
+  );
 
   return (
     <form onSubmit={handleSubmit} className="flex items-start gap-4">
@@ -88,25 +97,33 @@ export function ChatInput({onSendMessage, isLoading}: ChatInputProps) {
         value={message}
         onChange={e => setMessage(e.target.value)}
         onKeyDown={handleKeyDown}
-        placeholder={isRecording ? 'Listening...' : 'Type your symptoms here...'}
-        className="flex-1 resize-none"
+        placeholder={placeholder}
+        className="flex-1 resize-none border-blue-500/20 focus:border-blue-500/50 focus:ring-blue-500/20"
         rows={1}
         disabled={isLoading}
       />
-      {recognitionRef.current && (
+      {setupSpeechRecognition && (
         <Button
           type="button"
           onClick={toggleRecording}
           disabled={isLoading}
           size="icon"
           variant={isRecording ? 'destructive' : 'outline'}
-          className={cn(isRecording && 'text-red-500 animate-pulse')}
+          className={cn(
+            isRecording && 'text-red-500 animate-pulse',
+            'border-blue-500/20 hover:bg-blue-500/10 hover:border-blue-500/40'
+          )}
         >
           {isRecording ? <MicOff className="h-5 w-5" /> : <Mic className="h-5 w-5" />}
           <span className="sr-only">{isRecording ? 'Stop recording' : 'Start recording'}</span>
         </Button>
       )}
-      <Button type="submit" disabled={isLoading || !message.trim()} size="icon">
+      <Button 
+        type="submit" 
+        disabled={isLoading || !message.trim()} 
+        size="icon"
+        className="button-blue-gradient text-white border-0 hover:scale-105 transition-transform"
+      >
         <Send className="h-5 w-5" />
         <span className="sr-only">Send</span>
       </Button>

@@ -1,14 +1,14 @@
 'use client';
 
 import type {User} from 'firebase/auth';
-import {useState, useEffect} from 'react';
+import {useState, useEffect, useCallback, useMemo} from 'react';
 import type {ChatMessage} from '@/types';
 import {ChatList} from '@/components/chat-list';
 import {ChatInput} from '@/components/chat-input';
 import {submitMessage} from '@/app/actions';
 
 interface ChatProps {
-  user: Partial<User>;
+  user: Partial<User> | {uid: string};
 }
 
 const CHAT_HISTORY_KEY = 'health-assist-chat-history';
@@ -18,23 +18,33 @@ export function Chat({user}: ChatProps) {
   const [isLoading, setIsLoading] = useState(false);
   const [isHistoryLoading, setIsHistoryLoading] = useState(true);
 
+  // Memoize welcome message to prevent recreation
+  const welcomeMessage = useMemo<ChatMessage>(() => ({
+    id: 'welcome',
+    role: 'assistant',
+    content: 'Hello! I\'m your HealthAssist AI. I\'m here to help you with health-related questions and concerns. How are you feeling today?',
+    createdAt: new Date(),
+  }), []);
+
   // Load messages from localStorage on initial render
   useEffect(() => {
     try {
       const savedMessages = localStorage.getItem(CHAT_HISTORY_KEY);
       if (savedMessages) {
-        // We need to parse and then convert date strings back to Date objects
         const parsedMessages = JSON.parse(savedMessages).map((msg: ChatMessage) => ({
           ...msg,
           createdAt: new Date(msg.createdAt),
         }));
         setMessages(parsedMessages);
+      } else {
+        setMessages([welcomeMessage]);
       }
     } catch (error) {
       console.error("Failed to load chat history from localStorage", error);
+      setMessages([welcomeMessage]);
     }
     setIsHistoryLoading(false);
-  }, []);
+  }, [welcomeMessage]);
 
   // Save messages to localStorage whenever they change
   useEffect(() => {
@@ -47,7 +57,7 @@ export function Chat({user}: ChatProps) {
     }
   }, [messages, isHistoryLoading]);
 
-  const handleSendMessage = async (content: string) => {
+  const handleSendMessage = useCallback(async (content: string) => {
     if (!content.trim() || !user.uid) return;
 
     const userMessage: ChatMessage = {
@@ -75,12 +85,12 @@ export function Chat({user}: ChatProps) {
     } finally {
       setIsLoading(false);
     }
-  };
+  }, [user.uid]);
 
   return (
     <div className="flex flex-1 flex-col overflow-hidden">
       <ChatList messages={messages} isLoading={isLoading} isHistoryLoading={isHistoryLoading} user={user} />
-      <div className="border-t bg-card p-4">
+      <div className="border-t border-blue-500/20 bg-card p-4">
         <ChatInput onSendMessage={handleSendMessage} isLoading={isLoading} />
       </div>
     </div>

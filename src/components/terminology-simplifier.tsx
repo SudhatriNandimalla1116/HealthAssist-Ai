@@ -65,10 +65,10 @@ export function TerminologySimplifier() {
 
   return (
     <div className="grid gap-8 p-4 pt-0 md:grid-cols-2 md:p-6 md:pt-0">
-      <Card className="flex flex-col">
-        <CardHeader>
-          <CardTitle>Medical Text</CardTitle>
-          <CardDescription>
+      <Card className="flex flex-col border-blue-500/20 bg-card/50">
+        <CardHeader className="border-b border-blue-500/10">
+          <CardTitle className="text-blue-300">Medical Text</CardTitle>
+          <CardDescription className="text-blue-200">
             Enter complex medical terminology to get a simplified explanation.
           </CardDescription>
         </CardHeader>
@@ -87,7 +87,7 @@ export function TerminologySimplifier() {
                     <FormControl>
                       <Textarea
                         placeholder="e.g., 'The patient was diagnosed with myocardial infarction...'"
-                        className="flex-1 resize-none"
+                        className="flex-1 resize-none border-blue-500/20 focus:border-blue-500/50 focus:ring-blue-500/20"
                         {...field}
                       />
                     </FormControl>
@@ -95,7 +95,11 @@ export function TerminologySimplifier() {
                   </FormItem>
                 )}
               />
-              <Button type="submit" disabled={isSimplifying}>
+              <Button 
+                type="submit" 
+                disabled={isSimplifying}
+                className="button-blue-gradient text-white border-0 hover:scale-105 transition-transform"
+              >
                 {isSimplifying ? (
                   <Loader2 className="mr-2 h-4 w-4 animate-spin" />
                 ) : (
@@ -108,19 +112,24 @@ export function TerminologySimplifier() {
         </CardContent>
       </Card>
 
-      <Card className="flex flex-col">
-        <CardHeader>
+      <Card className="flex flex-col border-blue-500/20 bg-card/50">
+        <CardHeader className="border-b border-blue-500/10">
           <div className="flex items-start justify-between">
             <div>
-              <CardTitle>Simplified Explanation</CardTitle>
-              <CardDescription>
+              <CardTitle className="text-blue-300">Simplified Explanation</CardTitle>
+              <CardDescription className="text-blue-200">
                 An easy-to-understand version of the text.
               </CardDescription>
             </div>
             {simplifiedText && !isSimplifying && (
-              <Button variant="ghost" size="icon" onClick={handleCopy}>
+              <Button 
+                variant="ghost" 
+                size="icon" 
+                onClick={handleCopy}
+                className="text-blue-400 hover:bg-blue-500/10 hover:text-blue-300"
+              >
                 {hasCopied ? (
-                  <Check className="h-4 w-4 text-accent" />
+                  <Check className="h-4 w-4 text-green-400" />
                 ) : (
                   <Clipboard className="h-4 w-4" />
                 )}
@@ -132,16 +141,16 @@ export function TerminologySimplifier() {
         <CardContent className="flex-1">
           {isSimplifying && (
             <div className="flex h-full items-center justify-center">
-              <Loader2 className="h-8 w-8 animate-spin text-muted-foreground" />
+              <Loader2 className="h-8 w-8 animate-spin text-blue-400" />
             </div>
           )}
           {simplifiedText && !isSimplifying && (
-            <div className="h-full rounded-lg bg-muted/50 p-4">
-              <p className="whitespace-pre-wrap text-sm">{simplifiedText}</p>
+            <div className="h-full rounded-lg bg-blue-500/10 border border-blue-500/20 p-4">
+              <p className="whitespace-pre-wrap text-sm text-blue-100">{simplifiedText}</p>
             </div>
           )}
           {!simplifiedText && !isSimplifying && (
-            <div className="flex h-full items-center justify-center rounded-lg border-2 border-dashed text-center text-muted-foreground">
+            <div className="flex h-full items-center justify-center rounded-lg border-2 border-dashed border-blue-500/30 text-center text-blue-300">
               <p>Your simplified text will appear here.</p>
             </div>
           )}

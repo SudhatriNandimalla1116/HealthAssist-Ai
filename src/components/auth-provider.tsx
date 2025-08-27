@@ -20,12 +20,24 @@ export function AuthProvider({children}: AuthProviderProps) {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, user => {
-      setUser(user);
+    // Check if Firebase auth is available
+    if (!auth) {
+      console.log('Firebase auth not available, running in demo mode');
       setLoading(false);
-    });
+      return;
+    }
 
-    return () => unsubscribe();
+    try {
+      const unsubscribe = onAuthStateChanged(auth, user => {
+        setUser(user);
+        setLoading(false);
+      });
+
+      return () => unsubscribe();
+    } catch (error) {
+      console.warn('Firebase auth error:', error);
+      setLoading(false);
+    }
   }, []);
 
   return <AuthContext.Provider value={{user, loading}}>{children}</AuthContext.Provider>;

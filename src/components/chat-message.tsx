@@ -9,7 +9,7 @@ import {Button} from './ui/button';
 
 interface ChatMessageProps {
   message: ChatMessageT;
-  user: Partial<User>;
+  user: Partial<User> | {uid: string; photoURL?: string; displayName?: string};
 }
 
 export function ChatMessage({message, user}: ChatMessageProps) {
@@ -60,7 +60,7 @@ export function ChatMessage({message, user}: ChatMessageProps) {
       )}
     >
       {!isUser && (
-        <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-primary/20 text-primary">
+        <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-blue-500/20 text-primary border border-blue-500/30">
           <Bot className="h-6 w-6" />
         </div>
       )}
@@ -68,14 +68,21 @@ export function ChatMessage({message, user}: ChatMessageProps) {
         <div
           className={cn(
             'rounded-xl px-4 py-3',
-            isUser ? 'rounded-br-none bg-primary text-primary-foreground' : 'rounded-bl-none bg-card shadow-sm'
+            isUser 
+              ? 'rounded-br-none button-blue-gradient text-white shadow-lg' 
+              : 'rounded-bl-none bg-card shadow-sm border border-blue-500/20'
           )}
         >
           <p className="whitespace-pre-wrap text-sm">{message.content}</p>
           {!isUser && message.audioUrl && (
             <>
               <audio ref={audioRef} src={message.audioUrl} className="hidden" />
-              <Button onClick={handlePlayAudio} variant="ghost" size="icon" className="mt-2 h-8 w-8">
+              <Button 
+                onClick={handlePlayAudio} 
+                variant="ghost" 
+                size="icon" 
+                className="mt-2 h-8 w-8 text-blue-500 hover:bg-blue-500/10 hover:text-blue-400"
+              >
                 {isPlaying ? <Volume2 className="h-4 w-4" /> : <Play className="h-4 w-4" />}
                 <span className="sr-only">{isPlaying ? 'Pause' : 'Play'}</span>
               </Button>
@@ -84,16 +91,19 @@ export function ChatMessage({message, user}: ChatMessageProps) {
         </div>
 
         {!isUser && message.disclaimer && (
-          <Alert variant={message.isEmergency ? 'destructive' : 'default'} className="mt-2">
-            <AlertTriangle className="h-4 w-4" />
-            <AlertDescription className="text-xs">{message.disclaimer}</AlertDescription>
+          <Alert 
+            variant={message.isEmergency ? 'destructive' : 'default'} 
+            className="mt-2 border-blue-500/20 bg-blue-500/5"
+          >
+            <AlertTriangle className="h-4 w-4 text-blue-500" />
+            <AlertDescription className="text-xs text-blue-200">{message.disclaimer}</AlertDescription>
           </Alert>
         )}
       </div>
       {isUser && (
-        <Avatar className="h-10 w-10">
+        <Avatar className="h-10 w-10 border-2 border-blue-500/30">
           <AvatarImage src={user.photoURL ?? ''} alt={user.displayName ?? ''} />
-          <AvatarFallback>
+          <AvatarFallback className="bg-blue-500/20 text-blue-300">
             {user.displayName ? user.displayName.charAt(0).toUpperCase() : <UserIcon />}
           </AvatarFallback>
         </Avatar>

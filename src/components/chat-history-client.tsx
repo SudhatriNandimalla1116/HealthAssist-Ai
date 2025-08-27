@@ -28,7 +28,7 @@ export function ChatHistoryClient() {
   }, []);
 
   return (
-    <Card className="h-full">
+    <Card className="h-full border-blue-500/20 bg-card/50">
       <CardContent className="h-full p-0">
         <ChatList
           messages={messages}

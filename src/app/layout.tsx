@@ -1,33 +1,30 @@
 import type {Metadata} from 'next';
+import {Inter} from 'next/font/google';
 import './globals.css';
 import {AuthProvider} from '@/components/auth-provider';
-import {Toaster} from '@/components/ui/toaster';
+
+const inter = Inter({subsets: ['latin']});
 
 export const metadata: Metadata = {
   title: 'HealthAssist AI',
-  description: 'An AI-powered healthcare bot by Firebase Studio',
+  description: 'Your personal AI-powered health assistant',
 };
 
 export default function RootLayout({
   children,
-}: Readonly<{
+}: {
   children: React.ReactNode;
-}>) {
+}) {
   return (
-    <html lang="en" className="dark" suppressHydrationWarning>
+    <html lang="en" className="h-full">
       <head>
+        {/* Performance optimizations */}
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
-        <link
-          href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Source+Code+Pro&display=swap"
-          rel="stylesheet"
-        />
+        <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
       </head>
-      <body className="font-body antialiased">
-        <AuthProvider>
-          {children}
-          <Toaster />
-        </AuthProvider>
+      <body className={`${inter.className} h-full`}>
+        <AuthProvider>{children}</AuthProvider>
       </body>
     </html>
   );

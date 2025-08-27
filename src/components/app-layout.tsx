@@ -46,7 +46,7 @@ export function AppLayout({children}: AppLayoutProps) {
               <SidebarMenuButton
                 asChild
                 isActive={pathname === '/'}
-                tooltip={{children: 'Symptom Checker'}}
+                tooltip={{children: 'Chat'}}
               >
                 <Link href="/">
                   <MessageSquare />
@@ -63,7 +63,7 @@ export function AppLayout({children}: AppLayoutProps) {
                 <SidebarMenuButton
                   asChild
                   isActive={pathname === '/tools/terminology-simplifier'}
-                  tooltip={{children: 'Terminology Simplifier'}}
+                  tooltip={{children: 'Explain Terms'}}
                 >
                   <Link href="/tools/terminology-simplifier">
                     <BookText />
@@ -75,7 +75,7 @@ export function AppLayout({children}: AppLayoutProps) {
                 <SidebarMenuButton
                   asChild
                   isActive={pathname === '/tools/symptom-condition-mapper'}
-                  tooltip={{children: 'Symptom Mapper'}}
+                  tooltip={{children: 'Check Symptoms'}}
                 >
                   <Link href="/tools/symptom-condition-mapper">
                     <HeartPulse />
@@ -87,11 +87,11 @@ export function AppLayout({children}: AppLayoutProps) {
                 <SidebarMenuButton
                   asChild
                   isActive={pathname === '/tools/health-progress-tracker'}
-                  tooltip={{children: 'Progress Tracker'}}
+                  tooltip={{children: 'Health History'}}
                 >
                   <Link href="/tools/health-progress-tracker">
                     <LineChart />
-                    <span>Health Tracker</span>
+                    <span>Health History</span>
                   </Link>
                 </SidebarMenuButton>
               </SidebarMenuItem>

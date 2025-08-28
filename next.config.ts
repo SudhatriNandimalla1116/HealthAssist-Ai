@@ -8,14 +8,8 @@ const nextConfig: NextConfig = {
   eslint: {
     ignoreDuringBuilds: true,
   },
-  // Performance optimizations
-  swcMinify: true,
   compress: true,
   poweredByHeader: false,
-  // Reduce bundle size
-  experimental: {
-    optimizeCss: true,
-  },
   // Image optimization
   images: {
     remotePatterns: [

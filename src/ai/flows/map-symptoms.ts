@@ -27,7 +27,32 @@ const MapSymptomsOutputSchema = z.object({
 export type MapSymptomsOutput = z.infer<typeof MapSymptomsOutputSchema>;
 
 export async function mapSymptoms(input: MapSymptomsInput): Promise<MapSymptomsOutput> {
-  return mapSymptomsFlow(input);
+  try {
+    return await mapSymptomsFlow(input);
+  } catch (error) {
+    console.error('AI flow error, using fallback response:', error);
+    
+    // Fallback response when AI is not available
+    const fallbackResponse = `I understand you're experiencing symptoms. While I can't provide a medical diagnosis, I can help explain medical terminology and provide general information.
+
+For the symptoms you mentioned, it's important to:
+• Monitor your symptoms and note any changes
+• Consider consulting with a healthcare professional for proper evaluation
+• Use this tool to understand medical terminology better
+
+Common symptoms and general information:
+• Fever: Usually indicates infection or inflammation
+• Headache: Can be caused by stress, dehydration, or other factors
+• Fatigue: May be related to sleep, stress, or underlying conditions
+• Pain: Location and type of pain can help identify the cause
+
+Remember: This AI is for informational purposes only and does not constitute medical advice. Always consult with a qualified healthcare professional for diagnosis and treatment.`;
+    
+    return {
+      potentialConditions: fallbackResponse,
+      disclaimer: 'This information is intended for informational purposes only and does not constitute medical advice. Always consult with a qualified healthcare professional for diagnosis and treatment.',
+    };
+  }
 }
 
 const prompt = ai.definePrompt({

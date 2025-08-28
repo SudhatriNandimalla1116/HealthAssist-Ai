@@ -23,7 +23,56 @@ const EmergencyTriageOutputSchema = z.object({
 export type EmergencyTriageOutput = z.infer<typeof EmergencyTriageOutputSchema>;
 
 export async function emergencyTriage(input: EmergencyTriageInput): Promise<EmergencyTriageOutput> {
-  return emergencyTriageFlow(input);
+  try {
+    return await emergencyTriageFlow(input);
+  } catch (error) {
+    console.error('AI flow error, using fallback emergency triage:', error);
+    
+    // Fallback emergency triage when AI is not available
+    const userInput = input.userInput.toLowerCase();
+    
+    // Simple keyword-based emergency detection
+    if (userInput.includes('chest pain') || userInput.includes('heart attack')) {
+      return {
+        isEmergency: true,
+        response: 'Seek immediate medical attention. Chest pain can be a sign of a heart attack.'
+      };
+    }
+    
+    if (userInput.includes('difficulty breathing') || userInput.includes('breathing problem')) {
+      return {
+        isEmergency: true,
+        response: 'Seek immediate medical attention. Difficulty breathing can be a sign of a serious respiratory issue.'
+      };
+    }
+    
+    if (userInput.includes('loss of consciousness') || userInput.includes('fainted')) {
+      return {
+        isEmergency: true,
+        response: 'Seek immediate medical attention. Loss of consciousness can indicate a serious medical condition.'
+      };
+    }
+    
+    if (userInput.includes('severe bleeding') || userInput.includes('heavy bleeding')) {
+      return {
+        isEmergency: true,
+        response: 'Seek immediate medical attention. Severe bleeding requires immediate medical intervention.'
+      };
+    }
+    
+    if (userInput.includes('stroke') || userInput.includes('face drooping') || userInput.includes('arm weakness')) {
+      return {
+        isEmergency: true,
+        response: 'Seek immediate medical attention. Act F.A.S.T. - Face drooping, Arm weakness, Speech difficulty, Time to call 911.'
+      };
+    }
+    
+    // No emergency detected
+    return {
+      isEmergency: false,
+      response: ''
+    };
+  }
 }
 
 const prompt = ai.definePrompt({

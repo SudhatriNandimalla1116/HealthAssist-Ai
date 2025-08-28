@@ -29,28 +29,46 @@ export function Chat({user}: ChatProps) {
   // Load messages from localStorage on initial render
   useEffect(() => {
     try {
+      // Check if localStorage is available
+      if (typeof window === 'undefined' || !window.localStorage) {
+        console.warn('localStorage is not available, using welcome message only');
+        setMessages([welcomeMessage]);
+        setIsHistoryLoading(false);
+        return;
+      }
+
       const savedMessages = localStorage.getItem(CHAT_HISTORY_KEY);
       if (savedMessages) {
-        const parsedMessages = JSON.parse(savedMessages).map((msg: ChatMessage) => ({
+        const parsedMessages = JSON.parse(savedMessages).map((msg: any) => ({
           ...msg,
           createdAt: new Date(msg.createdAt),
         }));
         setMessages(parsedMessages);
+        console.log('Chat messages loaded from localStorage:', parsedMessages.length, 'messages');
       } else {
         setMessages([welcomeMessage]);
+        console.log('No saved messages found, using welcome message');
       }
     } catch (error) {
       console.error("Failed to load chat history from localStorage", error);
       setMessages([welcomeMessage]);
+    } finally {
+      setIsHistoryLoading(false);
     }
-    setIsHistoryLoading(false);
   }, [welcomeMessage]);
 
   // Save messages to localStorage whenever they change
   useEffect(() => {
-    if (!isHistoryLoading) {
+    if (!isHistoryLoading && messages.length > 0) {
         try {
+        // Check if localStorage is available
+        if (typeof window !== 'undefined' && window.localStorage) {
             localStorage.setItem(CHAT_HISTORY_KEY, JSON.stringify(messages));
+          console.log('Chat messages saved to localStorage:', messages.length, 'messages');
+          try {
+            window.dispatchEvent(new Event('health-assist-chat-history-updated'));
+          } catch (e) {}
+        }
         } catch (error) {
             console.error("Failed to save chat history to localStorage", error);
         }
